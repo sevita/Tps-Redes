@@ -1,0 +1,366 @@
+#! /usr/bin/env python
+import time
+import sys
+import math
+
+#### El parser genera un arreglo "data" que contiene en cada posicion un diccionario correspondiente
+#### a un paquete de datos capturado (una linea en el archivo de entrada). Las claves del diccionario son los
+#### distintos datos que incluye cada paquete.
+
+class FuenteDeInformacion:	
+	def __init__(self, diccSimboloProbabilidad):
+		self.__diccSimboloProba__ = diccSimboloProbabilidad
+	
+	def simbolos(self):
+		return self.__diccSimboloProba__.keys()
+	
+	def probabilidad(self, simbolo):
+		return self.__diccSimboloProba__[simbolo]
+	
+	def informacion(self, simbolo):
+		return (-1) * math.log(self.__diccSimboloProba__[simbolo],2)                 #### ACA ASUMO QUE LA INFORMACION LA CALCULAMOS EN BASE 2
+	
+	def entropia(self):
+		suma = 0.0
+		for proba in self.__diccSimboloProba__.itervalues():
+			suma = suma + proba * (-1.0) * math.log(proba,2)                         #### ACA ASUMO QUE LA INFORMACION LA CALCULAMOS EN BASE 2
+		return suma
+
+def parser(nombreArchivo):
+	f = open(nombreArchivo, 'r')
+	data = []
+	line = f.readline()[:-1] # Headers --> los descarto
+	line = f.readline()[:-1]
+	while line != "END":
+		items = line.split(" ")
+		paquete = dict()
+		paquete["TIME"]        = float(items[0])
+		paquete["MAC_SRC"]     = items[1]
+		paquete["MAC_DST"]     = items[2]
+		paquete["ARP_OP"]      = items[3] # ('who-has' o 'is-at')
+		paquete["ARP_MAC_SRC"] = items[4]
+		paquete["ARP_IP_SRC"]  = items[5]
+		paquete["ARP_MAC_DST"] = items[6]
+		paquete["ARP_IP_DST"]  = items[7]
+		data.append(paquete)
+		line = f.readline()[:-1]
+	f.close()
+	return data
+	
+def printPaquete(paquete):
+	print "{:<17} {:<17} {:<17} {:<7} {:<17} {:<17} {:<17} {:<17}".format(paquete["TIME"],paquete["MAC_SRC"],paquete["MAC_DST"],paquete["ARP_OP"],paquete["ARP_MAC_SRC"],paquete["ARP_IP_SRC"],paquete["ARP_MAC_DST"],paquete["ARP_IP_DST"])
+
+def calcularFuentesDeInformacion(data):
+	fuenteSRC    = dict()
+	fuenteDST    = dict()
+	cantMuestras = 0.0
+	
+	for pack in data:
+		if pack["ARP_OP"] == "who-has" and pack["MAC_DST"] == "ff:ff:ff:ff:ff:ff":
+			ipsrc = pack["ARP_IP_SRC"]
+			ipdst = pack["ARP_IP_DST"]
+			cantMuestras = cantMuestras + 1.0
+			if ipsrc in fuenteSRC:
+				fuenteSRC[ipsrc] = fuenteSRC[ipsrc] + 1.0
+			else:
+				fuenteSRC[ipsrc] = 1.0
+			if ipdst in fuenteDST:
+				fuenteDST[ipdst] = fuenteDST[ipdst] + 1.0
+			else:
+				fuenteDST[ipdst] = 1.0
+	
+	## Hago que fuenteSRC sea un dicc de simbolo-probabilidad
+	for k in fuenteSRC.iterkeys():
+		fuenteSRC[k] = fuenteSRC[k]/cantMuestras
+	for k in fuenteDST.iterkeys():
+		fuenteDST[k] = fuenteDST[k]/cantMuestras
+	
+	fuenteDeInfo_SRC = FuenteDeInformacion(fuenteSRC)
+	fuenteDeInfo_DST = FuenteDeInformacion(fuenteDST)
+	return fuenteDeInfo_SRC, fuenteDeInfo_DST
+
+""" 
+	calcularIpsSolicitadas(data,longit_intervalo):
+		data             = una lista de diccionarios, donde cada diccionario es un paquete (ver PACK).
+		longit_intervalo = Es un numero entero divisor de 30 (1,2,3,5,6,10,15,30).
+		
+		Devuelve un diccionario que por cada ip indica la cantidad de solicitudes.
+		Las ips que aparecen en el diccionario, son aquellas que aparecen en TODOS los intervalos
+		de longitud "longit_intervalo" de tiempo. Es decir, se toman todos los paquetes en el tiempo y se los
+		divide en intervalos de "longit_intervalo" minutos. Las ips en la salida son aquellas que aparecieron en todos esos
+		intervalos. De esta manera se eliminan ips que aparecieron pocas veces (no son las mas solicitadas).
+		
+		Si longit_intervalo = 30, apareceran todas las ips.
+"""
+def calcularIpsSolicitadas(data, longit_intervalo):
+	todas_las_ips = set()
+	ip_cantSolicitudes = dict()
+	for pack in data:
+		if pack["ARP_OP"] == "who-has" and pack["MAC_DST"] == "ff:ff:ff:ff:ff:ff":
+			ipdst = pack["ARP_IP_DST"]
+			todas_las_ips.add(ipdst)
+			if ipdst in ip_cantSolicitudes:
+				ip_cantSolicitudes[ipdst] = ip_cantSolicitudes[ipdst] + 1
+			else:
+				ip_cantSolicitudes[ipdst] = 1
+					
+	ips_interseccion_intervalos = interseccionDeIpsEnIntervalos(data,longit_intervalo,"DST")
+	for ip in todas_las_ips:
+		if ip not in ips_interseccion_intervalos:
+			del ip_cantSolicitudes[ip]
+		
+	return ip_cantSolicitudes
+
+def calcularIpsSolicitantes(data, longit_intervalo):	
+	todas_las_ips = set()
+	ip_cantSolicitudes = dict()
+	for pack in data:
+		if pack["ARP_OP"] == "who-has" and pack["MAC_DST"] == "ff:ff:ff:ff:ff:ff":
+			ipsrc = pack["ARP_IP_SRC"]
+			todas_las_ips.add(ipsrc)
+			if ipsrc in ip_cantSolicitudes:
+				ip_cantSolicitudes[ipsrc] = ip_cantSolicitudes[ipsrc] + 1
+			else:
+				ip_cantSolicitudes[ipsrc] = 1
+	
+	ips_interseccion_intervalos = interseccionDeIpsEnIntervalos(data, longit_intervalo, "SRC")
+	for ip in todas_las_ips:
+		if ip not in ips_interseccion_intervalos:
+			del ip_cantSolicitudes[ip]
+
+	return ip_cantSolicitudes
+
+def interseccionDeIpsEnIntervalos(data,longit_intervalo,srcOdst="DST"):
+	if srcOdst == "src":
+		srcOdst = "SRC"
+	if srcOdst == "dst":
+		srcOdst = "DST"
+		
+	if srcOdst != "SRC" and srcOdst != "DST":
+		print "Error: interseccionDeIpsEnIntervalos(data,longit_intervalo,srcOdst): srcOdst='SRC' o ='DST'"
+		exit(1)
+	
+	cant_intervalos = 30/longit_intervalo
+	ipsEnIntervalo = [] # por cada intervalo, tengo un conjunto de las ips que aparecen
+	for i in range(0,cant_intervalos):
+		ipsEnIntervalo.append(set())
+	for pack in data:
+		if pack["ARP_OP"] == "who-has" and pack["MAC_DST"] == "ff:ff:ff:ff:ff:ff":
+			ip = pack["ARP_IP_"+srcOdst]
+			time = pack["TIME"]
+			intervaloNro = int((int(time/60)/longit_intervalo))
+			ipsEnIntervalo[intervaloNro].add(ip)
+			
+	## Calcular interseccion
+	ips_interseccion = ipsEnIntervalo[0];
+	for i in range(1,cant_intervalos):
+		ips_interseccion = ips_interseccion.intersection(ipsEnIntervalo[i])
+		
+	return ips_interseccion
+
+class Grafo:
+	def __init__(self):
+		self.nodos = dict()
+		self.ejes  = dict()
+	
+	## Toma un nodo = string (nombre del nodo)
+	def agregarNodo(self, nodo):
+		if nodo not in self.nodos:
+			cantNodosActual = len(self.nodos.keys())
+			self.nodos[nodo] = cantNodosActual + 1                      # los nodos se enumeran desde 1
+	
+	## Toma dos nodos = string (nombre del nodo)
+	## Los nodos deben estar en el grafo!!
+	def agregarEje(self, nodoFuente, nodoDestino):
+		eje = (self.nodos[nodoFuente], self.nodos[nodoDestino])
+		if eje not in self.ejes:
+			self.ejes[eje] = 1
+		else:
+			self.ejes[eje] = self.ejes[eje] + 1
+	
+	def filtrarPorPesoMayorA(self,num):
+		ejesABorrar  = []
+		for eje, peso in self.ejes.iteritems():
+			if peso <= num:
+				ejesABorrar.append(eje)
+		
+		for eje in ejesABorrar:
+			del self.ejes[eje]	  ### BORRA EL EJE DEL GRAFO (APS!!)
+			
+		nodosConEjes = set()
+		for eje in self.ejes.iterkeys():
+			nodosConEjes.add(eje[0])
+			nodosConEjes.add(eje[1])
+		
+		nodosABorrar = []
+		for nodo,num in self.nodos.iteritems():
+			if num not in nodosConEjes:
+				nodosABorrar.append(nodo)
+		
+		for nodo in nodosABorrar:
+			del self.nodos[nodo]   ### BORRA EL NODO DEL GRAFO (APS!!)
+			
+		
+	def imprimir(self):
+		for nodo, num in self.nodos.iteritems():
+			print num, nodo
+		print "#"
+		for eje, peso in self.ejes.iteritems():
+			print eje[0], eje[1], peso
+		
+	
+def generarGrafo(data, filtro):
+	grafo = Grafo()
+	#~ grafo.agregarNodo("192.168.0.1")
+	#~ grafo.agregarNodo("192.168.0.7")
+	#~ grafo.agregarNodo("192.168.0.11")
+	#~ grafo.agregarNodo("10.2.1.1")
+	#~ grafo.agregarEje("10.2.1.1","192.168.0.1")
+	#~ grafo.agregarEje("10.2.1.1","192.168.0.1")
+	#~ grafo.agregarEje("192.168.0.11","192.168.0.1")
+	for pack in data:
+		if pack["ARP_IP_SRC"]!= "0.0.0.0" and pack["ARP_OP"] == "who-has" and pack["MAC_DST"] == "ff:ff:ff:ff:ff:ff" and pack["ARP_IP_SRC"]!=pack["ARP_IP_DST"]:
+			grafo.agregarNodo(pack["ARP_IP_SRC"])
+			grafo.agregarNodo(pack["ARP_IP_DST"])
+			grafo.agregarEje(pack["ARP_IP_SRC"],pack["ARP_IP_DST"])
+	
+	if int(filtro) > 0:
+		grafo.filtrarPorPesoMayorA(int(filtro))
+	grafo.imprimir()
+	
+
+
+if __name__ == "__main__":
+	if len(sys.argv) < 3:
+		print ""
+		print "Modo de uso:"
+		print "            python parser.py [ARCHIVO_ENTRADA] [COMANDO] [OPCIONES_COMANDO]"
+		print ""
+		print "[COMANDO]:"
+		print "        ips_solicitadas [n]  : Por cada IP destino en un 'who-has', la cantidad de apariciones."
+		print "                              'n' indica la longitud de los intervalos de tiempo muestreados."
+		print "        ips_solicitantes [n] : Por cada IP fuente en un 'who-has', la cantidad de apariciones."
+		print "        probabilidad_src     : Por cada IP fuente, la frecuencia con que aparece en el total de paquetes."
+		print "        probabilidad_dst     : Por cada IP destino, la frecuencia con que aparece en el total de paquetes."
+		print "        informacion_src      : Por cada IP fuente, la informacion que generan en la fuente S_src."
+		print "        informacion_dst      : Por cada IP destino, la informacion que generan en la fuente S_dst."
+		print "        entropia_src         : Entropia de la fuente S_src."
+		print "        entropia_dst         : Entropia de la fuente S_dst."
+		print "        paquetes_raros       : Imprime paquetes que no sean broadcast o no sean who-has o contengan"
+		print "                               la IP 0.0.0.0."
+		print "        buscar_ip [IP]       : Busca entre todos los paquetes a la 'IP' pasada por parametro y los muestra."
+		print "        grafo [filtro]       : Genera el grafo ARP-IP. 'filtro' es un numero entero >= 0 que permite elminar"
+		print "                               del grafo todos los ejes con peso <= filtro."
+		print ""
+		exit(1)
+		
+	nombreArchivoEntrada = sys.argv[1]
+	data = parser(nombreArchivoEntrada)
+	#~ for i in range(0,10):
+		#~ printPaquete(data[i])
+	
+	queHacer = sys.argv[2]
+	fuenteSRC, fuenteDST = calcularFuentesDeInformacion(data)
+	
+	#### OTROS ARGUMENTOS: desde argv[3] en adelante
+	
+	if queHacer == "probabilidad_src":
+		matriz = []
+		for ip in fuenteSRC.simbolos():
+			matriz.append((ip, fuenteSRC.probabilidad(ip)))
+		matriz = sorted(matriz, key=lambda ip_proba: ip_proba[1])
+		for elem in matriz:
+			print "{:<16} {:<20}".format(elem[0], elem[1])
+			
+	if queHacer == "probabilidad_dst":
+		matriz = []
+		for ip in fuenteDST.simbolos():
+			matriz.append((ip, fuenteDST.probabilidad(ip)))
+		matriz = sorted(matriz, key=lambda ip_proba: ip_proba[1])
+		for elem in matriz:
+			print "{:<16} {:<20}".format(elem[0], elem[1])
+
+	if queHacer == "informacion_src":
+		matriz = []
+		for ip in fuenteSRC.simbolos():
+			matriz.append((ip, fuenteSRC.informacion(ip)))
+		matriz = sorted(matriz, key=lambda ip_info: ip_info[1])
+		for elem in matriz:
+			print "{:<16} {:<20}".format(elem[0], elem[1])
+			
+	if queHacer == "informacion_dst":
+		matriz = []
+		for ip in fuenteDST.simbolos():
+			matriz.append((ip, fuenteDST.informacion(ip)))
+		matriz = sorted(matriz, key=lambda ip_info: ip_info[1])
+		for elem in matriz:
+			print "{:<16} {:<20}".format(elem[0], elem[1])
+
+	if queHacer == "entropia_src":
+		print fuenteSRC.entropia()
+			
+	if queHacer == "entropia_dst":
+		print fuenteDST.entropia()
+	
+	""" ############################################################ """
+	""" Imprimir IPS mas solicitadas (ver informe) ################# """
+	if queHacer == "ips_solicitadas":
+		diccionario = calcularIpsSolicitadas(data,int(sys.argv[3]))
+		matriz = []
+		for ip,cantSolicitudes in diccionario.iteritems():
+			matriz.append((ip, cantSolicitudes))
+		matriz = sorted(matriz, key=lambda ip_info: ip_info[1])
+		for elem in matriz:
+			print "{:<16} {:<20}".format(elem[0], elem[1])
+	""" ############################################################ """
+	
+	if queHacer == "ips_solicitantes":
+		diccionario = calcularIpsSolicitantes(data, int(sys.argv[3]))
+		matriz = []
+		for ip,cantSolicitudes in diccionario.iteritems():
+			matriz.append((ip, cantSolicitudes))
+		matriz = sorted(matriz, key=lambda ip_info: ip_info[1])
+		for elem in matriz:
+			print "{:<16} {:<20}".format(elem[0], elem[1])
+	
+	""" ############################################################ """
+	""" Imprimir Paquetes Raros (ver informe) ###################### """
+	if queHacer == "paquetes_raros":
+		is_at = []
+		no_broadcast = []
+		ip_src_nula = []
+		ip_dst_nula = []
+		for pack in data:
+			if pack["ARP_OP"] != "who-has": 
+				is_at.append(pack)
+			if pack["MAC_DST"] != "ff:ff:ff:ff:ff:ff":
+				no_broadcast.append(pack)
+			if pack["ARP_IP_SRC"] == "0.0.0.0":
+				ip_src_nula.append(pack)
+			if pack["ARP_IP_DST"] == "0.0.0.0":
+				ip_dst_nula.append(pack)
+		print "\n########### Paquetes 'is-at':\n"
+		for pack in is_at:
+			printPaquete(pack)
+		print "\n########### Paquetes no broadcast:\n"
+		for pack in no_broadcast:
+			printPaquete(pack)
+		print "\n########### Paquetes ARP_IP_SRC=0.0.0.0:\n"
+		for pack in ip_src_nula:
+			printPaquete(pack)
+		print "\n########### Paquetes ARP_IP_DST=0.0.0.0:\n"
+		for pack in ip_dst_nula:
+			printPaquete(pack)
+	""" ############################################################ """
+	
+	""" ############################################################ """
+	""" Buscar todos los paquetes donde aparece la IP dada ######### """
+	if queHacer == "buscar_ip":
+		ipBuscada = sys.argv[3]
+		for pack in data:
+			if pack["ARP_IP_SRC"] == ipBuscada or pack["ARP_IP_DST"] == ipBuscada:
+				printPaquete(pack)
+	""" ############################################################ """
+	
+	if queHacer == "grafo":
+		generarGrafo(data,sys.argv[3])

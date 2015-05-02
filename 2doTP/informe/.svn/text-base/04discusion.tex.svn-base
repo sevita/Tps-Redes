@@ -1,0 +1,124 @@
+\section{Discusión}
+
+\subsection{Comparación de técnicas para promediar datos} \label{discusion:comparacionDeMetricas}
+
+\subsubsection{Universidad de Cambridge}
+Comparamos las distintas métricas de promedio sobre el camino más probable. Observamos que la media y la media 10-podada tienen picos más pronunciados en los HOPs 6 y 16.
+Este es un comportamiento no deseado dado que es un valor de RTT acumulado, que debería comportarse como una función creciente. En términos simbólicos:
+\begin{description}
+ \item[Esperado:] $RTT^{acum}_{i-1} \leq RTT^{acum}_{i} \leq RTT^{acum}_{i+1}$
+ \item[Obtenido(picos):] $RTT^{acum}_{i-1} \approx RTT^{acum}_{i+1} << RTT^{acum}_{i}$
+\end{description}
+
+Es por esto que decidimos descartar estas dos primeras métricas. Por otro lado, decidimos no utilizar la mediana ya que se calcula a partir de 2 de los 1000 valores medidos.
+Dada la varianza que presentan los valores de RTT, la mediana nos permite eliminar outliers pero también elimina valores importantes necesarios para obtener una mejor aproximación.
+
+Luego entre las tres métricas restantes, elegimos la 30-podada, dado que cualquiera de las tres nos dá una buena aproximación de una función creciente. 
+
+\subsubsection{Universidad de Ucrania}
+
+Es idéntico al caso de Cambridge. La media y la mediana las descartamos por las mismas razones y la media 10-podada tiene únicamente un salto muy pronunciado que nos
+lleva a descartarla (HOP 6). Nuevamente elegimos la media 30-podada de entre las tres restantes.
+
+\subsubsection{Unviersidad de China}
+
+Nuevamente descartamos la media y la mediana por las mismas razones que Cambridge y en este caso cualquiera de las demás métricas es útil. Elegimos
+la media 30-podada para ser consistentes con los otros casos de estudio.
+
+\subsubsection{Conclusión General de los Promedios}
+
+En general se obtienen muchos outliers y por eso la media no es una buena métrica. La mediana como ya vimos ignora la mayoría de los datos.
+La media 30-podada elimina outliers, pero se queda con varios valores aproximados para luego promediar.
+
+
+\newpage
+
+
+\subsection{Caso de Estudio: Universidad de Cambridge}
+
+Como se observa en la tabla, todos los saltos poseen probabilidad 1. Con lo cual el camino más ``pesado'' es probabilísticamente único, es decir que en las 1000 mediciones realizadas
+los nodos de esta ruta estuvieron activos y estables, pero esto no quita la posibilidad de que existan rutas alternativas.
+
+En cuanto a las dos maneras de calcular los $RTT_i$, elegimos la segunda porque la cantidad de valores nulos es menor, con lo cual nos provee más información.
+Además si observamos la Figura \ref{resultados:cambridge:zrtt}, al graficar los valores acumulados de estos $RTT_i$, obtenemos una buena aproximación de los $RTT^{acum}_{i}$
+(calculados directamente de la muestra).
+
+Si observamos el gráfico de $ZRRT_i$, hay claramente dos saltos destacados: 6 y 8. Esto también se deduce del gráfico de los RTT
+acumulados, donde se produce un incremento pronunciado en los mismos saltos. En cambio si observamos la tabla de geolocalizaciones los enlaces
+submarinos aparecen en los saltos 6 y 14 (obervar que la DNS del salto 14 es la primera que pasa de Estados Unidos a Inglaterra). Pero los saltos
+del 7 al 14 según el $ZRTT$ no son destacados, de hecho la variación del $RTT$ es prácticamente nula, con lo cual concluímos que es un error
+de la geolocalización (los nombre de los dominios 7 a 13 no son del todo precisos). Con lo cual los enlaces submarinos están en 6 y 8, y podemos
+concluír que un umbral de aceptación de saltos destacados sería de $1<u<4$ (destaca a ambos y a ningún otro).
+
+En cuanto al mapa, comparamos las distancias aproximadas en cada enlace submarino con los RTTs:
+\begin{center}
+ \begin{tabular}{|c|c|c|}
+  \hline
+  Enlace & Distancia & Delay=$RTT/2$ \\
+  \hline
+  5-6   & 9000 Km   & 63,94 ms\\
+  \hline
+  7-8   & 6000 Km   & 45,86 ms\\
+  \hline
+ \end{tabular}
+\end{center}
+En este caso es clara la proporción con respecto a la distancia (evidentemente los tiempos de encolamiento no afectaron en esa parte del trayecto).
+
+\subsection{Caso de Estudio: Universidad de Ucrania}
+Si analizamos las posibles rutas que pueden tomar los paquetes (\ref{resultados:Ucrania:caminos}) podemos observar que todos los saltos poseen probabilidad 1 excepto el número 6. En dicho salto, se puede observar dos posibles caminos que luego se vuelven a juntar en el salto 7. Esto significa que en algún momento de la medición, uno de los nodos estuvo inactivo o sobrecargado con lo cual los paquetes debieron ser transmitidos al otro. Por otro lado, el nodo del salto 7 posee probabilidad 1, por lo tanto podemos afirmar que ambos nodos del salto 6 están conectados con el del 7.  
+
+Una vez analizado esto, generamos el camino mas utilizado para llegar a Ucrania y comparamos las dos formas de medir los $RTT_i$ (\ref{resultados:Ucrania:camino}) 
+Si observamos la tabla, podemos concluir que la segunda manera de calcular los $RTT_i$ nos provee mayor información ya que posee menos valores nulos.
+
+Al comparar el gráfico de $ZRRT_i$ (Figura: \ref{resultados:Ucrania:zrtt}) con la tabla y los gráficos de geolocalización (\ref{resultados:ucrania:geolocalizar}), podemos notar que nuestro camino debe realizar 4 saltos que demandan mucho más tiempo que los demás. Dichos saltos son el 6, 8, 19 y  22.
+\begin{center}
+ \begin{tabular}{|c|c|c|}
+  \hline
+  TTL & Distancia & Delay=$RTT/2$ \\
+  \hline
+  6   & 9000 Km   & 64,44 ms\\
+  \hline
+  8   & 6000 Km   & 53.72 ms\\
+  \hline
+  19   & 2000 Km   & 14.19 ms\\
+  \hline
+  22   & 0 Km   & 6.96 ms\\
+  \hline
+ \end{tabular}
+\end{center}
+
+El salto 6 es el de mayor $ZRRT$ y esto se debe a que es un enlace submarino que recorre aproximadamente 9.000 km. En el caso del 8, también es un enlace submarino que en este caso conecta dos continentes (América con Europa). Dicho enlace tiene menor $ZRRT$, lo cual puede deberse tanto a la distancia del enlace como al tiempo de encolamiento de los paquetes. Si tomamos como parametro el enlace 6, entonces podriamos decir que pese a que el 8 recorre una gran distancia, tambien demora mucho en responder los $TIME-EXCEEDED$. Al observar la geolocalización del salto 19, podemos notar que realiza mas de 2.000 km lo cual explicaría porque su $ZRRT$ se destaca de los demás. Por ultimo, el 22 es un salto que posee un $ZRRT$ destacado pero a la vez no recorre demasiada distancia. Esto nos lleva a pensar que el enlace posee mucha demora de encolamiento para los paquetes $TIME-EXCEEDED$
+
+Por lo tanto, los enlaces submarinos son el 6 y el 8 y podemos destacarlos usando un umbral $2<u<4$
+
+
+\subsection{Caso de Estudio: Universidad de China}
+
+Observando el Cuadro \ref{resultados:china:rtts}, la cantidad de valores nulos para $RTT_i$ calculados usando la opción 2 es mucho menor que los de
+la opción 1, con lo cual para el resto del análisis utilizamos esos valores por aportar más información.
+
+Este caso es similar a Cambridge ya que encontramos una única ruta con probabilidad 1. Observemos además que el camino a China tiene menos saltos
+que el camino a Cambridge, sin embargo el último RTT acumulado es más de 100 ms superior al de Cambridge: Esto es porque la distancia recorrida
+es mayor, es decir que tenemos menos routers pero enlaces más largos.
+
+Observando el gráfico de $ZRTT_i$, rápidamente encontramos que los saltos 6 y 8 se destacan mucho comparados con los demás. Esto es consistente
+con los valores acumulados de los $RTT_i$. De los tres casos de estudio este es el mejor condicionado (a simple vista las operaciones realizadas
+sobre los datos no arrastraron outliers).
+
+La geolocalización corrobora todos los valores empíricos calculados previamente: no fue necesario utilizar los valores de $RTT_i$ o $ZRTT_i$ para
+construír el mapa, tan sólo con los datos de la tabla (DNS y geolocalización del servicio web) pudimos construirlo y ser consistentes con el resto
+del análisis. Por lo tanto, los enlaces submarinos son 6 y 8 y podemos destacarlos usando un umbral $0<u<3$ (no destaca otros). Si comparamos las distancias, tenemos que:
+
+\begin{center}
+ \begin{tabular}{|c|c|c|}
+  \hline
+  Enlace & Distancia & Delay=$RTT_i/2$ \\
+  \hline
+  5-6   & 9000 Km   & 72 ms\\
+  \hline
+  7-8   & 12800 Km   & 104,17 ms\\
+  \hline
+ \end{tabular}
+\end{center}
+
+Nuevamente se verifica que la distancia es proporcional al delay del enlace.

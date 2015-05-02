@@ -1,0 +1,21 @@
+\section{Introducción} \label{intro}
+
+El nivel de red del modelo OSI introduce el \emph{router} con el objetivo de interconectar redes de nivel 2. 
+Para minimizar el delay y evitar ciclos, se utilizan distintos algoritmos, conocidos como algoritmos de routeo (RIP, OSPF, BGP, etc.).
+Estos algoritmos generan una red lógica, que establece rutas en la red física para alcanzar una IP pública en alguna parte del mundo desde cada router.
+Las rutas no son fijas y podrían variar todas las veces que fuera necesario (por ejemplo si un nodo o enlace deja de funcionar). Uno de los
+objetivos de este trabajo es \emph{mostrar que la probabilidad de que una ruta se modifique es muy baja}. También nos interesará analizar cuáles son las
+\emph{rutas geográficas} atravesadas para llegar a distintos puntos del mundo.
+
+El Round Trip Time de un enlace punto a punto es fácil de calcular conociendo las propiedades del medio que conecta los dos hosts. Agregar
+switches y otros hosts a la conexión complica este cálculo porque los RTTs dependen de las distintas propiedades de los medios interconectados por los
+switches. Si además agregamos routers que separan distintas redes switcheadas, el RTT desde un emisor a un receptor es altamente variable
+y muy difícil de calcular de manera teórica. Además no sólo dependerán de las propiedades de los medios de transmisión en cada red sino además del
+tiempo en que cada paquete permanezca encolado en cada router, que podría variar de router a router. Esto motiva otro de los objetivos del trabajo:
+\emph{estimar empíricamente el RTT de cada salto} (i.e. entre un host y un router o entre dos routers).
+
+Finalmente, Internet tal como existe hoy en día está compuesta de varios backbones que llevan la mayor parte del tráfico mundial, que luego
+es distribuído por sistemas autónomos de distintos tamaños. Algunas de las conexiones más destacadas son las de fibra óptica submarinas.
+Para poder llegar desde un continente a otro en algún momento hay que atravesar el océano mediante estos cables. Por la longitud que tienen,
+es esperable que el RTT de esos enlaces sea elevado. Entonces otro objetivo del trabajo será \emph{identificar los enlaces submarinos} basándonos en el RTT
+medido y en las rutas geográficas calculadas.

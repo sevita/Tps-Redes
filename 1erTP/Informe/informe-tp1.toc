@@ -1,0 +1,17 @@
+\select@language {spanish}
+\contentsline {section}{\numberline {1}Introducci\IeC {\'o}n}{3}{section.1}
+\contentsline {section}{\numberline {2}Desarrollo}{4}{section.2}
+\contentsline {subsection}{\numberline {2.1}IPs M\IeC {\'a}s Solicitadas}{4}{subsection.2.1}
+\contentsline {subsection}{\numberline {2.2}Grafos de relaciones ARP}{4}{subsection.2.2}
+\contentsline {subsection}{\numberline {2.3}Informaci\IeC {\'o}n y Entrop\IeC {\'\i }a}{4}{subsection.2.3}
+\contentsline {subsection}{\numberline {2.4}Paquetes destacados (``raros'')}{5}{subsection.2.4}
+\contentsline {subsubsection}{\numberline {2.4.1}ARP\_OP=who-has, broadcast, ARP\_IP\_SRC=0.0.0.0}{5}{subsubsection.2.4.1}
+\contentsline {subsubsection}{\numberline {2.4.2}ARP\_OP=who-has, broadcast, ARP\_IP\_SRC=ARP\_IP\_DST (ARP gratuito)}{5}{subsubsection.2.4.2}
+\contentsline {subsubsection}{\numberline {2.4.3}ARP\_OP=who-has, unicast}{5}{subsubsection.2.4.3}
+\contentsline {subsubsection}{\numberline {2.4.4}ARP\_OP=is-at, broadcast, no es ARP gratuito}{5}{subsubsection.2.4.4}
+\contentsline {subsubsection}{\numberline {2.4.5}ARP\_OP=who-has, broadcast, ARP\_IP\_DST = ip p\IeC {\'u}blica}{5}{subsubsection.2.4.5}
+\contentsline {section}{\numberline {3}Resultados}{6}{section.3}
+\contentsline {subsection}{\numberline {3.1}Red Laboratorios DC}{6}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Red Entrepiso}{10}{subsection.3.2}
+\contentsline {subsection}{\numberline {3.3}Red Centro de Estudiantes}{11}{subsection.3.3}
+\contentsline {section}{\numberline {4}Bibliograf\'{\i }a}{12}{section.4}

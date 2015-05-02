@@ -1,0 +1,10 @@
+
+informe-tp1.pdf : informe-tp1.tex 
+	pdflatex -shell-escape informe-tp1.tex
+	pdflatex -shell-escape informe-tp1.tex
+	
+clean:
+	rm -v -f informe-tp1.aux informe-tp1.out informe-tp1.log
+	
+clean all:
+	rm -v -f informe-tp1.pdf informe-tp1.aux informe-tp1.out informe-tp1.log 

@@ -1,0 +1,50 @@
+ 1  & {\tt      192.168.0.1} &  \verb+No encontrada+ &                       Reserved &     0.0000,0.0000\\
+\hline
+ 2  & {\tt      10.24.128.1} &  \verb+No encontrada+ &                       Reserved &     0.0000,0.0000\\
+\hline
+ 3  & {\tt    181.47.254.85} &  \verb+cpe-181-47-254-85.telecentro-reversos.com.ar+ &     \resaltada      Argentina,Entre Ríos & -30.9546,-58.7833\\
+\hline
+ 4  & {\tt  208.178.195.214} &  \resaltada \verb+global-crossing-argentina-s-a.xe-0-3-1.ar3.eze1.gblx.net+ &         United States,Virginia &  38.8048,-77.0469\\
+\hline
+ 5  & {\tt  208.178.195.213} &  \verb+xe-0-3-1.ar3.eze1.gblx.net+ &         United States,Virginia &  38.8048,-77.0469\\
+\hline
+ 6  & {\tt    67.16.148.102} &   \resaltada \verb+po5.ar1.MIA2.gblx.net+ &                  United States &  38.0000,-97.0000\\
+\hline
+ 7  & {\tt     4.68.111.121} &  \verb+ae5.edge2.miami2.level3.net+ &                  United States &  38.0000,-97.0000\\
+\hline
+ \resaltada 8  & {\tt     4.69.138.123} &  \verb+ae-32-52.ebr2.Miami1.Level3.net+ &                  United States &  38.0000,-97.0000\\
+\hline
+ 9  & {\tt     4.69.140.142} &  \verb+ae-2-2.ebr2.Atlanta2.Level3.net+ &                  United States &  38.0000,-97.0000\\
+\hline
+10  & {\tt      4.69.132.33} &  \verb+ae-1-100.ebr1.Atlanta2.Level3.net+ &                  United States &  38.0000,-97.0000\\
+\hline
+11  & {\tt     4.69.148.106} &  \verb+ae-6-6.ebr1.Washington12.Level3.net+ &                  United States &  38.0000,-97.0000\\
+\hline
+12  & {\tt     4.69.143.214} &  \verb+ae-1-100.ebr2.Washington12.Level3.net+ &                  United States &  38.0000,-97.0000\\
+\hline
+13  & {\tt      4.69.201.65} &  \verb+ae-57-57.ebr1.NewYork1.Level3.net+ &                  United States &  38.0000,-97.0000\\
+\hline
+14  & {\tt      4.69.137.69} &   \resaltada \verb+ae-42-42.ebr2.London1.Level3.net+ &                  United States &  38.0000,-97.0000\\
+\hline
+15  & {\tt      4.69.143.93} &  \verb+vlan103.ebr1.London1.Level3.net+ &                  United States &  38.0000,-97.0000\\
+\hline
+16  & {\tt     4.69.133.101} &  \verb+ae-4-4.car1.Manchesteruk1.Level3.net+ &                  United States &  38.0000,-97.0000\\
+\hline
+17  & {\tt    195.50.119.98} &  \verb+No encontrada+ &       \resaltada           United Kingdom &   51.5000,-0.1300\\
+\hline
+18  & {\tt     146.97.33.41} &  \verb+ae29.erdiss-sbr1.ja.net+ & United Kingdom,London, City of &   51.5142,-0.0931\\
+\hline
+19  & {\tt     146.97.33.26} &  \verb+ae30.lowdss-sbr1.ja.net+ & United Kingdom,London, City of &   51.5142,-0.0931\\
+\hline
+20  & {\tt    146.97.37.186} &  \verb+ae0.camb-rbr2.ja.net+ & United Kingdom,London, City of &   51.5142,-0.0931\\
+\hline
+21  & {\tt     146.97.130.2} &  \verb+University-of-Cambridge.Camb-rbr1.eastern.ja.net+ & United Kingdom,London, City of &   51.5142,-0.0931\\
+\hline
+22  & {\tt      192.84.5.93} &  \verb+route-enet.route-mill.net.cam.ac.uk+ &  United Kingdom,Cambridgeshire &    52.2000,0.1167\\
+\hline
+23  & {\tt      192.84.5.98} &  \verb+route-mill.route-west.net.cam.ac.uk+ &  United Kingdom,Cambridgeshire &    52.2000,0.1167\\
+\hline
+24  & {\tt    193.60.89.241} &  \verb+mint.admin.cam.ac.uk+ &  United Kingdom,Cambridgeshire &    52.2000,0.1167\\
+\hline
+25  & {\tt   131.111.150.25} &  \verb+primary.admin.cam.ac.uk+ &  United Kingdom,Cambridgeshire &    52.2000,0.1167\\
+\hline

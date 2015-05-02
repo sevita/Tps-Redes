@@ -1,0 +1,115 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[paper=a4paper, left=1.5cm, right=1.5cm, bottom=1.5cm, top=1.5cm]{geometry}
+\usepackage{ucs}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage[latin,spanish]{babel}
+\usepackage{fontenc}
+\usepackage{graphicx}
+\usepackage{caratula}
+\usepackage[table]{xcolor}
+\usepackage{changepage}
+
+% \usepackage{algpseudocode}
+% \usepackage{algorithmicx}
+% \usepackage{color}
+% \usepackage{pdfpages}
+% \usepackage{tikz}
+%%%%%% Si se usa tikz para dibujar digrafos, cuando pongas flechas, tira un conflicto. Se soluciona con estas dos lineas:
+% \usepackage[matrix,arrow]{xy}
+% \usetikzlibrary{intersections}
+
+% \usepackage{dsfont}
+% \newcommand{\real}{\mathds{R}}
+% \newcommand{\nat}{\mathds{N}}
+% \newcommand{\complejos}{\mathds{C}}
+% \newcommand{\Subesp}{\mathds{S}}
+
+\usepackage{hyperref}
+\hypersetup{%
+ % Para que el PDF se abra a pagina completa.
+  pdfstartview= {FitH \hypercalcbp{\paperheight-\topmargin-1in-\headheight}},
+  pdfauthor={Gaston Requeni},
+  pdfsubject={Preinforme - Final Orga2},
+ %pdfkeywords={keyword1} {key2} {key3},
+ colorlinks=true,
+  linkcolor=black,
+  urlcolor=blue
+}
+
+\author{Gastón Requeni}
+\title{TITULO}
+\date{DD/MM/AAAA}
+
+\parskip = 4pt
+
+
+%%%% UNA MAGIA PARA QUE LA BIBLIOGRAFIA SEA UNA SECCION MAS
+\makeatletter
+\renewenvironment{thebibliography}[1]
+     {\section{\bibname}% <-- this line was changed from \chapter* to \section*
+      \@mkboth{\MakeUppercase\bibname}{\MakeUppercase\bibname}%
+      \list{\@biblabel{\@arabic\c@enumiv}}%
+           {\settowidth\labelwidth{\@biblabel{#1}}%
+            \leftmargin\labelwidth
+            \advance\leftmargin\labelsep
+            \@openbib@code
+            \usecounter{enumiv}%
+            \let\p@enumiv\@empty
+            \renewcommand\theenumiv{\@arabic\c@enumiv}}%
+      \sloppy
+      \clubpenalty4000
+      \@clubpenalty \clubpenalty
+      \widowpenalty4000%
+      \sfcode`\.\@m}
+     {\def\@noitemerr
+       {\@latex@warning{Empty `thebibliography' environment}}%
+      \endlist}
+\makeatother
+
+\newcommand{\resaltada}{\cellcolor{blue!25}}
+
+\begin{document}
+
+\input{00caratula.tex}
+\newpage
+
+\tableofcontents
+\newpage
+
+\input{01introduccion.tex}
+\newpage
+
+\input{02desarrollo.tex}
+\newpage
+
+\input{03resultados.tex}
+\newpage
+
+\input{04discusion.tex}
+\newpage
+
+\section{Conclusiones}
+Si comparamos las rutas que obtuvimos para llegar tanto a Cambridge como a la universidad de Ucrania, podemos observar que el camino hasta Estados Unidos es el mismo en ambos casos. Por otro lado, la primera IP que se encuentra localizada en dicho país no es siempre la misma ya que esta varió en tres ocaciones. Una vez que llegamos a Estados unidos, el camino hasta el Europa tambien es el mismo en ambos casos. 
+Al analizar las DNS de ambas rutas, podemos notar que la mayoria de estas pertenecen a la empresa Level3 \footnote{http://www.level3.com/es/}. Dicha empresa posee una red troncal de Internet de Tier 1
+
+Como se observa en los tres casos de estudio, la distancia es proporcional al delay. Esto nos lleva a pensar que si la distancia que recorre un enlace es muy grande, el tiempo de encolamiento en el router es despreciable.
+
+En cuanto al umbral de $ZRTT$ para detectar enlaces submarinos, obtuvimos:
+\begin{itemize}
+ \item Cambridge: $1<u<4$
+ \item Ucrania: $2<u<4$
+ \item China: $0<u<3$
+\end{itemize}
+Con lo cual suponemos que podemos tomar un umbral $u\in (1,3)\subseteq \mathbb{R}$ para detectar enlaces submarinos usando $Z$-scores.
+Esto lo determinamos tomando la cota inferior más grande (en ninguno de los tres casos destaca un enlace que no es submarino) y la cota
+superior más chica (en todos los casos detectará al menos los saltos submarinos).
+
+\newpage
+
+\input{bibliografia.tex}
+
+\end{document}

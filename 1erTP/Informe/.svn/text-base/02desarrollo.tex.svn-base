@@ -1,0 +1,148 @@
+\section{Desarrollo}
+
+Se realizará un análisis sobre 3 redes de área local distintas, intentando identificar características de las mismas en los paquetes del protocolo ARP. 
+
+Las redes elegidas fueron:
+\begin{itemize}
+\item Red Laboratorios DC: Esta red se sitúa en los laboratorios del departamento de computacion de la facultad de Ciencias Exactas y Naturales. Para poder acceder a la misma, tuvimos que loguearnos en una de las computadoras fijas del laboratorio. Se puede acceder también mediante una conexión
+wireless.
+
+\item Red Entrepiso: Esta red se encuentra en los pasillos de la Facultad de Ciencias Exactas y Naturales y en algunas oficinas. Se puede acceder
+por Ethernet o Wi-Fi, pero en este caso, accedimos por Wi-Fi para realizar las mediciones.
+
+\item Red Centro de Estudiantes (CECEN): Esta red se encuentra en el pabellón 2 de Ciudad Universitaria, en los alrededores del kiosko del centro
+de estudiantes de Exactas. Sólo se puede acceder de manera wireless.
+
+\end{itemize}
+
+El análisis comenzará tomando una muestra de paquetes capturados en cada una de las redes durante {\bf 30 minutos}. Luego usaremos una herramienta
+de software para leer esos datos y procesarlos de distintas maneras. En la secciones posteriores, desarrollaremos distintos métodos de análisis
+de los datos, y luego mostraremos y discutiremos los resultados.
+
+\subsection{IPs Más Solicitadas}
+
+De entre todos los paquetes de la muestra vamos a quedarnos únicamente con los que sean del tipo {\tt who-has} y broadcast. El objetivo
+será buscar las IPs que más fueron solicitadas como destino del {\tt who-has} (ARP\_IP\_DST), es decir las IPs por las que más se preguntó en la red.
+
+Para esto vamos a contar la cantidad de veces que cada IP fue solicitada. Esta metodología tiene el inconveniente de que aparezca una IP con una
+cantidad de solicitudes inmensa en un intervalo de tiempo muy reducido. Eso corresponde a un sesgo en la medición, dado que consideramos que una
+IP es muy solicitada cuando es solicitada uniformemente a lo largo de los 30 minutos de la captura.
+
+Para evitar en gran medida el sesgo, vamos a tomar intervalos de tiempo de tamaño $n$ minutos ($n$ divisor de 30). Luego vamos a tener en cuenta
+sólo a las IPs que hayan sido solicitadas en \emph{todos} los intervalos al menos una vez, y contar las veces que se solicitaron éstas
+en los 30 minutos. La elección de $n$ no debería ser arbitraria, es por eso que realizaremos algunos experimentos para determinar el valor de $n$
+que muestre los datos más apropiados, y mostraremos en este informe sólo algunos de ellos (los más significativos).
+
+Este análisis se complementa con los grafos de relaciones ARP.
+
+\subsection{IPs Más Solicitantes}
+
+Aquí plantearemos un análisis idéntico al anterior, pero considerando ahora la cantidad de solicitudes realizadas por cada IP, es decir las IPs
+que más aparecen como fuente del {\tt who-has} (ARP\_IP\_SRC).
+
+Este análisis también se complementa con los grafos de relaciones ARP.
+
+\subsection{Grafos de relaciones ARP}
+
+Crearemos grafos cuyos nodos se corresponderán con IPs y cuyas aristas con paquetes ARP enviados:
+$$ IP1 \longrightarrow_n IP2$$
+significa que la $IP1$ envió $n$ veces un {\tt who-has} broadcast cuya ip destino fue $IP2$.
+
+Este grafo permitirá distinguir la cantidad de nodos distintos que referencian a cada IP (sacando las repeticiones que se contabilizaban en IPs solicitadas
+y solicitantes). Además nos proporcionará una idea global de las relaciones en la red, permitiendo distinguir uno o más nodos especiales.
+
+\subsection{Información y Entropía}
+
+Para el siguiente análisis consideraremos dos fuentes teóricas:
+\begin{itemize}
+ \item $S_{src} = {s_1, s_2, \dots, s_n}$: Cada símbolo $s_i$ es una dirección IP que aparece en el campo ARP\_IP\_SRC de los paquetes ARP.
+ \item $S_{dst} = {d_1, d_2, \dots, d_n}$: Cada símbolo $d_i$ es una dirección IP que aparece en el campo ARP\_IP\_DST de los paquetes ARP. 
+\end{itemize}
+Por cada paquete ARP capturado, se considera que estas fuentes emitieron un símbolo (ARP\_IP\_SRC ó ARP\_IP\_DST respectivamente).
+
+La idea es analizar la información de cada símbolo y compararla con la entropía de la fuente.
+
+Aquí también utilizaremos la idea de dividir los 30 minutos en intervalos más chicos y calcular la intersección.
+
+\subsection{Paquetes destacados (``raros'')} \label{paquetes-destacados}
+En las secciones posteriores estudiaremos algunos paquetes observados que resultaron extraños comparados con el uso estándar del protocolo ARP.
+
+\subsubsection{ARP\_OP=who-has, broadcast, ARP\_IP\_SRC=0.0.0.0}
+Encontramos diversos paquetes del estilo:
+
+\begin{center}
+\scriptsize
+ \begin{tabular}{ | c | c | c | c | c | c | c |}
+\hline
+ MAC\_SRC & MAC\_DST & ARP\_OP & ARP\_MAC\_SRC & ARP\_IP\_SRC & ARP\_MAC\_DST & ARP\_IP\_DST \\
+ \hline
+ {\color{red} {\tt 00:27:0e:0d:f3:4b}} & {\color{blue} {\tt ff:ff:ff:ff:ff:ff}} & {\color{blue} {\tt who-has}} & {\tt 00:27:0e:0d:f3:4b} & {\color{blue} {\tt 0.0.0.0}} & {\tt 00:00:00:00:00:00} & {\color{red} {\tt 10.2.5.14}}\\
+ \hline
+ \multicolumn{7}{|c|}{¿Quién tiene la IP {\tt 10.2.5.14}? Informar a {\tt 0.0.0.0} ({\tt 00:27:0e:0d:f3:4b})}\\
+ \hline
+\end{tabular}
+\end{center}
+
+El paquete fue capturado en ``Red Labos DC''.
+Es un paquete broadcast preguntando por una IP en particular, pero la IP fuente es nula. Buscamos otros paquetes correspondientes a la IP
+{\tt 10.2.5.14}, y encontramos el siguiente:
+
+\begin{center}
+\scriptsize
+ \begin{tabular}{ | c | c | c | c | c | c | c |}
+\hline
+ MAC\_SRC & MAC\_DST & ARP\_OP & ARP\_MAC\_SRC & ARP\_IP\_SRC & ARP\_MAC\_DST & ARP\_IP\_DST \\
+ \hline
+ {\color{red} {\tt 00:27:0e:0d:f3:4b}} &{\tt ff:ff:ff:ff:ff:ff} &{\tt who-has} &{\tt 00:27:0e:0d:f3:4b} &{\color{red} {\tt 10.2.5.14}} &{\tt 00:00:00:00:00:00} &{\tt 10.2.5.249}\\
+ \hline
+ \multicolumn{7}{|c|}{¿Quién tiene la IP {\tt 10.2.5.249}? Informar a {\tt 10.2.5.14} ({\tt 00:27:0e:0d:f3:4b})}\\
+ \hline
+\end{tabular}
+\end{center}
+
+Esto nos llamó mucho la atención, y luego de realizar
+una investigación al respecto, encontramos que estos paquetes se usan para detectar direcciones IP duplicadas\cite{linux-ip}\cite{man-arping}.
+Como se observa en el ejemplo,
+la IP {\tt 10.2.5.249} corresponde a la MAC address {\tt 00:27:0e:0d:f3:4b}, que es la misma que envió el paquete extraño que mencionamos primero.
+
+Si observamos el algoritmo de un host receptor de un paquete ARP (sección \ref{intro}): Si el host receptor tiene la misma IP que el emisor,
+en el paso 2 responderá con un paquete que indique su MAC. Entonces el host emisor, al recibirlo, detectará que hay una IP duplicada.
+
+\subsubsection{ARP\_OP=who-has, broadcast, ARP\_IP\_SRC=ARP\_IP\_DST (ARP gratuito)}
+Es una técnica utilizada para \emph{anunciar} que un host es \emph{dueño} de una IP. Los demás hosts de la red, cuando reciban este mensaje,
+pueden tenerlo en cuenta o no: Si alguien tiene la ip duplicada, puede modificarla para evitar que haya duplicados o simplemente ignorar el
+mensaje y seguir teniendo la ip duplicada, o tal vez enviar otro ARP gratuito (dar pelea...). En UNIX se respeta y acepta la ip de un host que
+envía un ARP gratuito. Ver \cite{linux-ip}.
+
+Los paquetes tienen este formato: (ejemplo extraído de Red Labos DC)
+\begin{center}
+\scriptsize
+ \begin{tabular}{ | c | c | c | c | c | c | c |}
+\hline
+ MAC\_SRC & MAC\_DST & ARP\_OP & ARP\_MAC\_SRC & ARP\_IP\_SRC & ARP\_MAC\_DST & ARP\_IP\_DST \\
+ \hline
+ {\tt b8:af:67:a1:ea:9e} & {\color{blue} {\tt ff:ff:ff:ff:ff:ff}} & {\color{blue} {\tt who-has}} & {\tt b8:af:67:a1:ea:9e} & {\color{blue} {\tt 10.2.0.187}} & {\tt 00:00:00:00:00:00} & {\color{blue} {\tt 10.2.0.187}}\\
+ \hline
+ \multicolumn{7}{|c|}{{\tt b8:af:67:a1:ea:9e} anuncia que tiene la IP {\tt 10.2.0.187}}\\
+ \hline
+\end{tabular}
+\end{center}
+
+Este formato también sirve para hacer ARP spoofing. Un host envía este paquete y, en una red de host UNIX, podría empezar a recibir los paquetes
+destinados a otra IP. A partir de eso, se podrían modificar los paquetes y reenviarlos al verdadero destinatario, o simplemente hacerce pasar
+por el destinatario y responder al emisor. Para más detalles sobre este uso, ver \cite{ettercap}.
+
+Existe otra manera de generar un ARP gratuito, que es enviando un paquete {\tt is-at} broadcast, donde ARP\_MAC\_SRC = ARP\_MAC\_DST, ARP\_IP\_SRC = ARP\_IP\_DST (ver \cite{linux-ip}). No observamos paquetes de este estilo en nuestras mediciones.
+
+\subsubsection{ARP\_OP=who-has, unicast}
+
+Los switchs a veces envían paquetes {\tt who-has} unicast para confirmar que un host sigue levantado. Este procedimiento se conoce típicamente como ARPING
+\cite{man-arping}.
+
+\subsubsection{ARP\_OP=is-at, broadcast, no es ARP gratuito}
+
+No logramos encontrar ninguna explicación a esto.
+
+\subsubsection{ARP\_OP=who-has, broadcast, ARP\_IP\_DST = ip pública}
+
+No logramos encontrar ninguna explicación a esto.

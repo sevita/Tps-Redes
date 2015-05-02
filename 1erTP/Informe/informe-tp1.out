@@ -1,0 +1,16 @@
+\BOOKMARK [1][-]{section.1}{Introducci\363n}{}
+\BOOKMARK [1][-]{section.2}{Desarrollo}{}
+\BOOKMARK [2][-]{subsection.2.1}{IPs M\341s Solicitadas}{section.2}
+\BOOKMARK [2][-]{subsection.2.2}{Grafos de relaciones ARP}{section.2}
+\BOOKMARK [2][-]{subsection.2.3}{Informaci\363n y Entrop\355a}{section.2}
+\BOOKMARK [2][-]{subsection.2.4}{Paquetes destacados \(``raros''\)}{section.2}
+\BOOKMARK [3][-]{subsubsection.2.4.1}{ARP\137OP=who-has, broadcast, ARP\137IP\137SRC=0.0.0.0}{subsection.2.4}
+\BOOKMARK [3][-]{subsubsection.2.4.2}{ARP\137OP=who-has, broadcast, ARP\137IP\137SRC=ARP\137IP\137DST \(ARP gratuito\)}{subsection.2.4}
+\BOOKMARK [3][-]{subsubsection.2.4.3}{ARP\137OP=who-has, unicast}{subsection.2.4}
+\BOOKMARK [3][-]{subsubsection.2.4.4}{ARP\137OP=is-at, broadcast, no es ARP gratuito}{subsection.2.4}
+\BOOKMARK [3][-]{subsubsection.2.4.5}{ARP\137OP=who-has, broadcast, ARP\137IP\137DST = ip p\372blica}{subsection.2.4}
+\BOOKMARK [1][-]{section.3}{Resultados}{}
+\BOOKMARK [2][-]{subsection.3.1}{Red Laboratorios DC}{section.3}
+\BOOKMARK [2][-]{subsection.3.2}{Red Entrepiso}{section.3}
+\BOOKMARK [2][-]{subsection.3.3}{Red Centro de Estudiantes}{section.3}
+\BOOKMARK [1][-]{section.4}{Bibliograf\355a}{}

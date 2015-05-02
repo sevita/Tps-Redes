@@ -1,0 +1,80 @@
+\section{Discusión}
+
+\subsection{Red Laboratorios DC}
+
+Vamos a analizar primero los grafos, utilizando los histogramas de ips solicitadas y solicitantes como complemento.
+
+En el primero de los grafos (Figura \ref{grafo-redlabos-1}, superior), observamos la red en general. Es interesante destacar que sólo graficando los
+envíos de paquetes ARP {\tt who-has}, el grafo nos muestra una aproximación de la topología de la red. Es difícil mostrar la IP que aparece en cada nodo 
+(dado el tamaño del grafo), pero haciendo zoom pudimos observar que todas las IPs correspondientes al círculo y abanico  más grandes del grafo, tienen
+la forma {\tt 10.2.100.X} (con la excepción de algunas IPs públicas, que fueron consideradas en los casos atípicos, ver sección \ref{paquetes-destacados}).
+Estas IPs corresponden a la parte wifi de la red (esto lo sabemos porque ingresamos a la red desde una laptop y controlamos la IP). Si observamos a la
+derecha del grafo, cada uno de los círculos conexos corresponde a un laboratorio distinto (ver Figura \ref{grafo-redlabos-2} para una imágen ampliada).
+En cada círculo aparecen IPs del tipo {\tt 10.2.[LABO].X}, donde {\tt X} puede ser una máquina o el/los switch/es.
+
+En la parte wifi de la red, hay dos nodos bien distinguidos: {\tt 10.2.100.254} y {\tt 10.2.100.35}.
+\begin{itemize}
+ \item Si observamos el zoom realizado en la Figura 
+\ref{grafo-redlabos-1}, {\tt 10.2.100.254} recibe y envía muchos paquetes ARP, mientras que {\tt 10.2.100.35} sólo envía. Ésto se ve reflejado en los
+histogramas: en IPs Solicitadas (Figura \ref{solicitadas-redlabos}) no aparece {\tt 10.2.100.35}, pero sí {\tt 10.2.100.254}, mientras que en
+IPs Solicitantes (Figura \ref{solicitantes-redlabos}) aparecen ambas direcciones (de hecho son las que más veces realizaron solicitudes).
+\item Si observamos el grafo de Figura \ref{grafo-redlabos-1}, la {\tt 10.2.100.35} se conecta con casi todos los nodos del subgrafo conexo al que pertenece,
+mientras que {\tt 10.2.100.254} se conecta sólo al círculo.
+\end{itemize}
+
+Todo esto nos lleva a pensar que {\tt 10.2.100.254} es el router/switchL3 wifi con acceso a internet
+y {\tt 10.2.100.35} es otro access point wifi que extiende la red a otro sector físico. Esto explicaría la gran cantidad de solicitudes recibidas
+por {\tt 10.2.100.254} (todos buscan el router cuando se registran en la red, celulares, tables, laptops, etc),
+pero nadie pide la dirección de {\tt 10.2.100.35} porque es una extensión en principio desconocida
+del primero; además ambos envían muchos paquetes ARP porque les llegan paquetes de internet y deben buscar el dispositivo en la red local al cual entregar
+el paquete (necesitan la MAC a partir de la IP). De todas formas esta idea sólo quedará en suposiciones porque no controlamos la red y podríamos estar equivocados.
+
+En la Figura \ref{grafo-redlabos-2}, observamos que en cada círculo hay un comportamiento similar al de la red wifi: más de un nodo distinguido, entre ellos
+el nodo {\tt 10.2.X.254}. Además si observamos la IPs solicitantes (Figura \ref{solicitantes-redlabos}), en el histograma refinado a 15 minutos, vemos que
+aparecen \emph{todas} las direcciones terminadas en {\tt .254} del grafo. Con lo cual creemos que se trata del switch de cada uno de los labos.
+
+Por último, observemos la IP {\tt 10.2.1.230}: Es la IP más solicitada, incluso fue solicitada al menos una vez por minuto 
+(según Figura \ref{solicitadas-redlabos}). Sin embargo ni siquiera aprece entre las IPs solicitantes y si observamos el grafo (ver Figura \ref{grafo-redlabos-2}, la ampliación en el recuadro inferior), hay sólo 7 IPs diferentes que le enviaron paquetes ARP, pero le envian muchos cada una. Todas las
+IPs que la solicitan corresponden al laboratorio 1, y según nuestra teoría de que las direcciones {\tt .254} son switches, en este caso el switch es el
+que más solicita esta IP. Ante esto se nos ocurren tres posibilidades:
+\begin{itemize}
+ \item El host estuvo caído durante el tiempo de la captura y hubo muchas solicitudes enviadas sin respuesta.
+ \item Es un nodo distinguido, tal vez otro switchL3 que tiene acceso a alguna red interna de uso específico.
+ \item Es un \emph{host distinguido}, como por ejemplo un servidor de uso interno.
+\end{itemize}
+
+Nuevamente cabe aclarar que nuestras suposiciones podrían ser erróneas.
+
+Finalmente analizaremos la información y la entropía. En el caso de $S_{src}$, se observan muchas IPs por encima de la entropía y proporcionando aproximadamente la misma información: esto se debe a que hay muchos símbolos con baja probabilidad, entonces proporcionan mucha información pero aportan
+poco al cálculo de la entropía (que usa la probabilidad para ponderar). Entonces sólo unos pocos símbolos proporcionan menos información que la entropía,
+y esos corresponden a las IPs más solicitantes. En cambio en la fuente $S_{dst}$ hay una distribución lineal de las probabilidades de cada símbolo, entonces
+la entropía es el valor medio de las probabilidades. En este caso, al refinar por intervalos más pequeños, resulta que todas las IPs más solicitadas
+proporcionan información por debajo de la entropía.
+
+\subsection{Red Entrepiso}
+
+Vamos a analizar el grafo, junto a los histogramas de ips solicitadas y solicitantes.
+
+Para poder analizar el grafo, vamos a dividirla en 3 subredes (subgrafos conexos).
+
+La primera que analizaremos es la que posee mayor dimensión. En esta, podemos notar que la subred podría dividirse en dos partes. Por un lado, tenemos a las IPs que se conectan directamente con la IP {\tt 10.1.200.254}. Al hacer zoom, podemos notar que esta parte de la subred contiene a la ip {\tt 10.0.0.253} la cual recibe la mayor cantidad de IPs solicitadas. Esta IP se ubica en el extremo más alejado de {\tt 10.1.200.254} y pertenece a una red privada que recibe únicamente solicitudes de la IP {\tt 10.1.200.60}. 
+Por otro lado, tenemos a las IPs que tienen la forma {\tt 10.1.100.X}. Como bien vimos anteriormente, estas IPS corresponden a la red WIFI de los laboratorios del departamento de computación. Es por eso que llegamos a la conclusión de que la IP {\tt 10.1.200.254} es un router/switchL3 WIFI con acceso a internet que extiende a la red WIFI de los laboratorios del departamento de computación. 
+
+Las otras dos subredes a analizar son las que se conectan a las ips {\tt 10.1.11.254} y {\tt 10.1.17.254}. Si observamos los gráficos de las IPs solicitadas/solicitantes, podemos ver que sus valores son muy bajos, al igual que las IPs de los Host conectados a ellas. Esto nos lleva a pensar que estas dos subredes son cableadas y que las dos IPs distinguidas son los switch que las conectan ya que son de la forma {\tt X.X.X.254}.
+
+Finalmente analizaremos la información y la entropía. Se observa una situación muy similar a la de red labos dc. En $S_{src}$ la mayor parte de las IPs
+aparecen con más información que la entropía dado que son muchos hosts que envían uno o dos paquetes al switch, en cambio los switchs tienen menor
+información porque la probabilidad de que envíen ARP es alta, debido a que solicitan MACs de los hosts conectados. En $S_{dst}$ se observa un
+comportamiento similar a $S_{src}$ en el caso particular de esta red.
+
+
+\subsection{Red Centro de Estudiantes}
+
+El tamaño de esta red facilita el análisis, dado que desde el grafo de relaciones ARP ya se observan dos nodos claramente distinguidos:
+{\tt 192.168.1.1} y {\tt 192.168.1.135}. El histograma de IPs más solicitantes confirma esto. 
+Además según el histograma de IPs más solicitadas, aparece la IP distinguida {\tt 169.254.255.255}, pero no aparece {\tt 192.168.1.135}, con lo cual
+suponemos que este será un access point no principal (situación similar red laboratorios dc).
+
+Finalmente analizaremos la información y la entropía. Se observa una situación muy similar a la de red labos dc. Las IPs correspondientes a los
+switchesL3/routers, se corresponden con las IPs que dan menos información que la entropía (en $S_{src}$), y en $S_{dst}$, en el caso de {\tt 192.168.1.1},
+aparece con el mismo valor que la entropía.

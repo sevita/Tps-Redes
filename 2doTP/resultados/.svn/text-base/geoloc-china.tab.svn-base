@@ -1,0 +1,26 @@
+ 1  & {\tt      192.168.0.1} &  \verb+No encontrada+ &                       Reserved &     0.0000,0.0000\\
+\hline
+ 2  & {\tt      10.24.128.1} &  \verb+No encontrada+ &                       Reserved &     0.0000,0.0000\\
+\hline
+ 3  & {\tt    181.47.254.85} &  \verb+cpe-181-47-254-85.telecentro-reversos.com.ar+ &     \resaltada  Argentina,Entre Ríos & -30.9546,-58.7833\\
+\hline
+ 4  & {\tt  208.178.195.214} & \resaltada  \verb+global-crossing-argentina-s-a.xe-0-3-1.ar3.eze1.gblx.net+ &         United States,Virginia &  38.8048,-77.0469\\
+\hline
+ 5  & {\tt  208.178.195.213} &  \verb+xe-0-3-1.ar3.eze1.gblx.net+ &         United States,Virginia &  38.8048,-77.0469\\
+\hline
+ 6  & {\tt    67.16.129.202} &  \resaltada   \verb+po6-50G.ar4.LAX1.gblx.net+ &                United States &  38.0000,-97.0000\\
+\hline
+ 7  & {\tt    64.211.83.226} &  \verb+PCCW-GLOBAL-INC.TenGigabitEthernet8-1.1200.ar4.LAX1.gblx.net+ &                  United States &  38.0000,-97.0000\\
+\hline
+ 8  & {\tt    63.218.56.110} &  \resaltada \verb+JUCC.ten0-1-1-2.br04.hkg05.pccwbtn.net+ &          United States,Florida &  25.7743,-80.1937\\
+\hline
+ 9  & {\tt  203.188.118.121} &  \verb+No encontrada+ &                      Hong Kong &  22.2500,114.1667\\
+\hline
+10  & {\tt   203.188.117.34} &  \verb+No encontrada+ &                      Hong Kong &  22.2500,114.1667\\
+\hline
+11  & {\tt  137.189.192.250} &  \verb+No encontrada+ &                      Hong Kong &  22.2500,114.1667\\
+\hline
+12  & {\tt     137.189.9.57} &  \verb+No encontrada+ &                      Hong Kong &  22.2500,114.1667\\
+\hline
+13  & {\tt    137.189.11.73} &  \verb+www.cuhk.edu.hk+ &                      Hong Kong &  22.2500,114.1667\\
+\hline

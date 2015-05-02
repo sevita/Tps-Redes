@@ -1,0 +1,45 @@
+###[ Ethernet ]###
+  dst       = 00:15:af:cd:9e:25
+  src       = 00:0e:e8:d6:19:65
+  type      = 0x806
+###[ ARP ]###
+     hwtype    = 0x1
+     ptype     = 0x800
+     hwlen     = 6
+     plen      = 4
+     op        = who-has
+     hwsrc     = 00:0e:e8:d6:19:65
+     psrc      = 192.168.0.1
+     hwdst     = 00:00:00:00:00:00
+     pdst      = 192.168.0.3
+None
+###[ Ethernet ]###
+  dst       = 00:0e:e8:d6:19:65
+  src       = 00:15:af:cd:9e:25
+  type      = 0x806
+###[ ARP ]###
+     hwtype    = 0x1
+     ptype     = 0x800
+     hwlen     = 6
+     plen      = 4
+     op        = is-at
+     hwsrc     = 00:15:af:cd:9e:25
+     psrc      = 192.168.0.3
+     hwdst     = 00:0e:e8:d6:19:65
+     pdst      = 192.168.0.1
+None
+###[ Ethernet ]###
+  dst       = ff:ff:ff:ff:ff:ff
+  src       = 00:bb:3a:dc:09:b6
+  type      = 0x806
+###[ ARP ]###
+     hwtype    = 0x1
+     ptype     = 0x800
+     hwlen     = 6
+     plen      = 4
+     op        = who-has
+     hwsrc     = 00:bb:3a:dc:09:b6
+     psrc      = 192.168.0.6
+     hwdst     = 00:00:00:00:00:00
+     pdst      = 192.168.0.1
+None

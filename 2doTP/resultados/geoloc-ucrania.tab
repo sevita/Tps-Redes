@@ -1,0 +1,46 @@
+ 1  & {\tt      192.168.0.1} &  \verb+No encontrada+ &                       Reserved &     0.0000,0.0000\\
+\hline
+ 2  & {\tt      10.24.128.1} &  \verb+No encontrada+ &                       Reserved &     0.0000,0.0000\\
+\hline
+ 3  & {\tt    181.47.254.85} &  \verb+cpe-181-47-254-85.telecentro-reversos.com.ar+ &  \resaltada       Argentina,Entre Ríos & -30.9546,-58.7833\\
+\hline
+ 4  & {\tt  208.178.195.214} &  \resaltada \verb+global-crossing-argentina-s-a.xe-0-3-1.ar3.eze1.gblx.net+ &         United States,Virginia &  38.8048,-77.0469\\
+\hline
+ 5  & {\tt  208.178.195.213} &  \verb+xe-0-3-1.ar3.eze1.gblx.net+ &         United States,Virginia &  38.8048,-77.0469\\
+\hline
+ 6  & {\tt    67.16.147.134} & \resaltada \verb+te8-4-10G.ar1.MIA2.gblx.net+ &                  United States &  38.0000,-97.0000\\
+\hline
+ 7  & {\tt     4.68.111.121} &  \verb+ae5.edge2.miami2.level3.net+ &                  United States &  38.0000,-97.0000\\
+\hline
+ 8 \resaltada & {\tt     4.69.138.123} &  \verb+ae-32-52.ebr2.Miami1.Level3.net+ &                  United States &  38.0000,-97.0000\\
+\hline
+ 9  & {\tt     4.69.140.142} &  \verb+ae-2-2.ebr2.Atlanta2.Level3.net+ &                  United States &  38.0000,-97.0000\\
+\hline
+11  & {\tt      4.69.132.86} &  \verb+ae-2-2.ebr1.Washington1.Level3.net+ &                  United States &  38.0000,-97.0000\\
+\hline
+12  & {\tt     4.69.134.134} &  \verb+ae-71-71.csw2.Washington1.Level3.net+ &                  United States &  38.0000,-97.0000\\
+\hline
+13  & {\tt     4.69.134.149} &  \verb+ae-72-72.ebr2.Washington1.Level3.net+ &                  United States &  38.0000,-97.0000\\
+\hline
+14  & {\tt      4.69.137.53} & \resaltada \verb+ae-42-42.ebr2.Paris1.Level3.net+ &                  United States &  38.0000,-97.0000\\
+\hline
+15  & {\tt     4.69.143.141} & \resaltada \verb+ae-47-47.ebr1.Frankfurt1.Level3.net+ &                  United States &  38.0000,-97.0000\\
+\hline
+16  & {\tt      4.69.140.14} &  \verb+ae-91-91.csw4.Frankfurt1.Level3.net+ &                  United States &  38.0000,-97.0000\\
+\hline
+17  & {\tt     4.69.154.200} &  \verb+ae-4-90.edge4.Frankfurt1.Level3.net+ &                  United States &  38.0000,-97.0000\\
+\hline
+18  & {\tt     212.162.9.22} &  \verb+No encontrada+ &         \resaltada        United Kingdom &   51.5000,-0.1300\\
+\hline
+19  & {\tt    80.77.167.204} &  \verb+kiev-nt-b1-ae5-vlan2044.fiord.net.ua+ &      \resaltada       Russian Federation &  60.0000,100.0000\\
+\hline
+20  & {\tt    80.77.167.251} &  \verb+terabit-gw.fiord.net.ua+ &             Russian Federation &  60.0000,100.0000\\
+\hline
+21  & {\tt    193.41.88.101} &  \verb+tom.univ.kiev.ua+ &   \resaltada   Ukraine,Donets'ka Oblast' &   48.6553,37.9925\\
+\hline
+22  & {\tt    91.202.129.21} &  \verb+slon.univ.kiev.ua+ &      Ukraine,Donets'ka Oblast' &   48.6553,37.9925\\
+\hline
+23  & {\tt    91.202.129.26} &  \verb+rabbit.univ.kiev.ua+ &      Ukraine,Donets'ka Oblast' &   48.6553,37.9925\\
+\hline
+24  & {\tt    91.202.128.77} &  \verb+knu.ua+ &      Ukraine,Donets'ka Oblast' &   48.6553,37.9925\\
+\hline

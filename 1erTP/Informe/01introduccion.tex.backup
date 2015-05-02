@@ -1,0 +1,63 @@
+\section{Introducción} \label{intro}
+
+Este trabajo práctico consiste en escuchar pasivamente en una red de área local (LAN). Esto implica capturar paquetes que circulan
+en la red. Los paquetes pueden ser \emph{unicast}, \emph{broadcast} o \emph{multicast}. Los primeros son los paquetes dirigidos a una
+MAC en particular (dirección de una interfaz de red de algún host en la red), los segundos son los dirigidos a todas las MACs en la red
+y los últimos son los dirigidos a un cierto grupo de MACs específico.
+
+Nuestro objetivo será capturar los paquetes del protocolo ARP (Address Resolution Protocol). Este protocolo, según {\tt RFC 826},
+está diseñado para que todos los dispositivos en una red puedan encontrar la MAC address de una IP (asumiendo que se utiliza el protocolo
+IP a nivel de red). Cada vez que un dispositivo con dirección ({\tt MAC1},{\tt IP1}) quiera enviar un paquete a la {\tt IP2},
+si no conoce la dirección física de esta IP, envía un paquete ARP broadcast, preguntando quién tiene la {\tt IP2}. Luego se espera que
+el dispositivo con {\tt IP2}, responda un mensaje unicast a {\tt MAC1}, indicando {\tt MAC2}.
+
+A continuación vamos a establecer la notación para los paquetes ARP, utilizada en este informe:
+\begin{description}
+ \item[MAC\_SRC] Dirección MAC Ethernet del host emisor.
+ \item[MAC\_DST] Dirección MAC Ethernet del host receptor (dirección MAC a la cual se envía el paquete, pues el protocolo utiliza nivel de enlace
+ para el envío).
+ \item[ARP\_OP] Operación del paquete ARP. Puede ser {\tt who-has} ó {\tt is-at}.
+ \item[ARP\_MAC\_SRC] Dirección MAC del host emisor indicada en el paquete ARP.
+ \item[ARP\_IP\_SRC] Dirección IP del host emisor indicada en el paquete ARP.
+ \item[ARP\_MAC\_DST] Dirección MAC del host receptor indicada en el paquete ARP.
+ \item[ARP\_IP\_DST] Dirección IP del host receptor indicada en el paquete ARP.
+\end{description}
+
+Típicamente MAC\_DST será desconocida y entonces se usará la dirección broadcast ({\tt ff:ff:ff:ff:ff:ff}).
+
+Cada host tendrá una tabla de traducciones de IP-MAC, de tal manera que cuando se desea enviar un paquete a una IP (a nivel de red), si corresponde
+a la LAN, se envía utilizando la MAC. Para llenar y actualizar esta tabla es que se utiliza ARP.
+
+El algoritmo utilizado ante la captura de un paquete ARP (indicado en {\tt RFC 826}) es: (fue resumido por simplicidad, asumiendo que siempre
+se utilizan protocolos Ethernet-IP) {\color{red}\huge ??? }
+
+\begin{enumerate}
+ \item Si ARP\_IP\_SRC está en mi tabla de traducciones:
+ \begin{enumerate}
+  \item Actualizar la dirección de hardware asociada a ARP\_IP\_SRC en mi tabla de traducciones, reemplazando el valor actual por ARP\_MAC\_SRC.
+ \end{enumerate}
+ Si no:
+ \begin{enumerate}
+  \item Si ARP\_IP\_DST es mi IP:
+  \begin{enumerate}
+   \item Agregar (ARP\_IP\_SRC,ARP\_MAC\_SCR) a mi tabla de traducciones.
+  \end{enumerate}
+
+ \end{enumerate}
+  \item Si ARP\_IP\_DST es mi IP y ARP\_OP={\tt who-has}:
+  \begin{enumerate}
+   \item $swap$(ARP\_IP\_DST, ARP\_IP\_SRC)
+   \item $swap$(ARP\_MAC\_DST, ARP\_MAC\_SRC)
+   \item $set$(ARP\_MAC\_SRC, mi dirección física)
+   \item $set$(ARP\_OP, {\tt is-at})
+   \item Enviar el paquete a MAC\_DST = ARP\_MAC\_DST (respuesta al que me haya enviado el paquete) y MAC\_SRC = ARP\_MAC\_SRC (mi dirección física).
+  \end{enumerate}
+
+\end{enumerate}
+
+Observar que el paso (1) del algoritmo se realiza independientemente de la operación (ARP\_OP). Esto permite que quien reciba un paquete {\tt is-at}
+registre la dirección física y no envíe ninguna respuesta. Más aún, el algoritmo es muy laxo en cuanto a la validación de los campos del paquete,
+con lo cual podríamos establecer muchas variantes del funcionamiento típico mencionado previamente, que se acoplen a este algoritmo.
+
+El objetivo del trabajo consiste en extraer propiedades características de una red utilizando la información provista por los paquetes ARP que
+circulan en la misma.

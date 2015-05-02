@@ -1,0 +1,42 @@
+\section{Resultados}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=1\textwidth, trim=0 0 0 0]{../Graficos/grafo_RedLabos_1.pdf}
+
+\includegraphics[width=0.45\textwidth, trim=0 0 0 0]{../Graficos/grafo_RedLabos_1_zoom_2.pdf}
+\includegraphics[width=0.45\textwidth, trim=0 0 0 0]{../Graficos/grafo_RedLabos_1_zoom_1.pdf}
+
+\caption{Envío de paquetes ARP en RedLabosDC durante media hora de muestreo. Los nodos corresponden a IPs. Los ejes indican un envío de paquete
+{\tt who-has} broadcast, relacionando IP fuente con IP destino. El peso de los ejes es la cantidad de paquetes capturados. Ver zoom en Figura 
+\ref{zoom_redLabos}.}
+\end{figure}
+
+\newpage
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=\textwidth, trim=0 80 0 80]{../Graficos/grafo_RedLabos_1_zoom_3.pdf}
+\caption{Envío de paquetes ARP en RedLabosDC durante media hora de muestreo. Los nodos corresponden a IPs. Los ejes indican un envío de paquete
+{\tt who-has} broadcast, relacionando IP fuente con IP destino. El peso de los ejes es la cantidad de paquetes capturados.}
+\label{zoom_redLabos}
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=1\textwidth, trim=0 0 0 0]{../Graficos/grafo_Entrepiso.pdf}
+\caption{Envío de paquetes ARP en RedEntrepiso durante media hora de muestreo. Los nodos corresponden a IPs. Los ejes indican un envío de paquete
+{\tt who-has} broadcast, relacionando IP fuente con IP destino. El peso de los ejes es la cantidad de paquetes capturados.}
+\end{figure}
+
+\newpage
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=\textwidth, trim=0 0 0 0]{../Graficos/grafo_CECEN.pdf}
+\caption{Envío de paquetes ARP en RedCECEN, durante media hora de muestreo. Los nodos corresponden a IPs. Los ejes indican un envío de paquete
+{\tt who-has} broadcast, relacionando IP fuente con IP destino. El peso de los ejes es la cantidad de paquetes capturados.}
+\label{zoom_redLabos}
+\end{figure}
+
+\newpage

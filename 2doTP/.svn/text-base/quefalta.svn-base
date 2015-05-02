@@ -1,0 +1,49 @@
+
+* Terminar tool (cosas básicas, después cada uno tendrá su versión de la tool con las funciones que crea convenientes)
+* Informe (cosas básicas)
+* Análisis de datos (hacer los 2 primeros, después vemos cómo y cuando hacemos el tercero)
+* Informe de esos análisis
+
+
+
+MAPA RED GLOBAL
+
+http://www.computable.nl/pcit/imgdb/2273816
+
+
+OBJETIVOS:
+mostrar que la probabilidad de que una ruta se modifique es muy baja
+analizar cuáles son las rutas geográficas atravesadas 
+estimar empíricamente el RTT de cada salto
+identificar los enlaces submarinos basándonos en el RTT medido, y verificar la estimación con las rutas geográficas calculadas
+
+
+
+ANALIZAR:
+* Siempre con 1000 iteraciones y tolerancia 5:
+	sudo python traceroute.py [DIRECCION] 5 1000
+
+* comparacion de metricas:
+	En el archivo python, hay que descomentar la parte de comparacion de metricas en el main, y poner la que es matlab friendly.
+		python calcular.py [archivo] -1
+	En matlab:
+		graficos = graficosMatlab
+		graficos.comparacionDeMetricas('../datos/comparacion-metricas.in','Cambridge')
+		
+		Despues File->Export Setup: poner DPI = 300 y exportar en png.
+  Este grafico sirve para comparar las metricas y determinar que la media 30-podada es la mas razonable (menos desviaciones,
+  el rtt acumulado tiene mas sentido).
+
+#### De aca en mas, los otros graficos requieren fijar una metrica para el promedio: deberia sr la misma que se considero la mejor en el
+punto anterior. (para cambridge, es 30-podada, y supongo que en generl sera asi con todas).
+
+* hay una unica ruta con probabilidad 1 (decirlo hablado), osea qe se usa siempre la misma ruta (en 1000 iteraciones) 
+ (es improbable que se use otra) Aca tambien esta bueno ver la tablita de calcular.py
+
+* tablita que imprime calcular.py: rtt_1_i vs rtt_2_i
+
+#### De aca en mas, se usa rtt_2_i (al menos en cambridge ese fue el mejor de los dos), para calcular zscores y demas (no se usan ambos).
+
+* graficos de zscore para determinar saltos submarinos y umbral
+
+* mapa

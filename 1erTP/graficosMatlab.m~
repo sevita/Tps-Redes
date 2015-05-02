@@ -1,0 +1,64 @@
+%%%% La idea de este archivo es que para invocar las distintas funciones y
+%%%% generar distintos graficos, hay que hacer (por ejemplo):
+%%%% 
+%%%%   graficosMatlab.hist_ips_mas_solicitadas('archivo');
+%%%%
+%%%% Es decir que en general, para invocar una funcion, hay que usar:
+%%%%
+%%%%   graficosMatlab.nombre_de_la_funcion(arg1,arg2,...,argN);
+
+function funcion = graficosMatlab
+    funcion.hist_ips_mas_solicitadas = @hist_ips_mas_solicitadas;
+%%%% aca se definen los nombres de las funciones
+end
+
+%%%% declaro las funciones 
+
+function hist_ips_mas_solicitadas(inputFile)
+    if nargin < 1,
+        inputFile = 'input_matlab.in';
+    end
+
+    A = importdata(inputFile,' ');
+
+    cantDatos = length(A.data);
+    valores = A.data;
+    labels = A.rowheaders;
+    %~ valores(:,2) = [1:cantDatos]';
+    %~ [val, posicion] = sort(valores(:,1));
+    %~ for i=[1:cantDatos],
+        %~ labels(i) = A.rowheaders(posicion(i));
+    %~ end
+
+    %%%%  Corta el arreglo de valores desde el comienzo. Deja todos los valores
+    %%%%  desde corte_valor en adelante. Si el arreglo esta ordenado, esto
+    %%%%  elimina todos los valores menores (estricto) a corte_valor.
+    corte_valor = 10;
+    corte_indic = 1;
+    for i=1:cantDatos,
+        if valores(i) < corte_valor,
+            corte_indic = corte_indic + 1;
+        else
+            break;
+        end
+    end
+
+    bar(valores(corte_indic:cantDatos));
+    cantDatosGraficados = cantDatos - corte_indic + 1;
+    %barh(valores);
+    %for i=[1:cantDatos],
+    %    text(i,valores(i),labels(i), 'FontSize', 10, 'HorizontalAlignment','right','VerticalAlignment','bottom');
+    %end
+
+    %set(gca, 'YTick', [1:cantDatos]);
+    %set(gca, 'YTickLabel', labels, 'FontSize', 8);
+
+    grid;
+    title('IPs mas solicitadas - Medicion Red Labos-DC', 'FontSize', 16);
+    ylabel('Cantidad de Solicitudes en un lapso de 30 minutos', 'FontSize', 11);
+    xlabel('IP', 'FontSize', 11);
+    set(gca, 'YTick', 0:50:550);
+    set(gca, 'YLim', [0 550]);
+    set(gca, 'XLim', [0 cantDatosGraficados+1]);
+    xticklabel_rotate(1:cantDatosGraficados,90,labels(corte_indic:cantDatos),'FontSize', 8);
+end

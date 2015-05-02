@@ -1,0 +1,7 @@
+
+\begin{thebibliography}{X}
+\bibitem{linux-ip} \url{http://linux-ip.net/html/ether-arp.html}
+\bibitem{man-arping} {\tt man arping}
+\bibitem{ettercap} \url{http://ettercap.github.io/ettercap/}, \url{http://linux.die.net/man/8/ettercap} (ver opción {\tt arp} del programa).
+
+\end{thebibliography}

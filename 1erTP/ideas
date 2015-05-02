@@ -1,0 +1,13 @@
+* Al capturar en modo promiscuo y con filtro "arp", aparecen algunos paquetes ARP cuyo destino no es broadcast:
+  La explicación es que el router está mandando un ARPing a esas MAC addresses (le manda un ARP porque el ping
+  podría no responder por culpa de un firewall, en cambio el ARP responde seguro porque es necesario para que
+  funcione ethernet).
+  
+  Para generar mensajes de ese estilo, se puede usar:
+	$ sudo arping -I wlan0 192.168.0.6
+  Ese comando usa la interfaz wlan0 (si no se pone ese parámetro, se usa eth0) y hace arping a la ip 192.168.0.6.
+  Si nunca se había comunicado con ella, primero manda un broadcast. Pero si ya tiene la mac address asociada a esa IP,
+  manda who-has directamente a la mac address correspondiente, y ahí sucede lo mencionado previamente (el destino ya no es
+  broadcast).
+  
+  Entonces para hacer el TP, habría que filtrar por paquetes ARP que tengan destino broadcast.

@@ -1,0 +1,40 @@
+
+1) HISTOGRAMA DE IP's MAS SOLICITADAS:
+	Primero generar un archivo para que matlab pueda graficar:
+	
+		python parser.py Mediciones/medicionCECEN.txt ips_solicitadas 6 > DatosProcesados/ips_solicitadas_6_CECEN.in
+		
+		python parser.py Mediciones/medicionEntrepiso.txt ips_solicitadas 6 > DatosProcesados/ips_solicitadas_6_Entrepiso.in
+	
+		python parser.py Mediciones/medicionRedLabos.txt ips_solicitadas 6 > DatosProcesados/ips_solicitadas_6_RedLabos.in
+	
+	Parámetros: El número 6 puede valer cualquiera de los siguientes: 1,2,3,5,6,10,15,30
+				Indica la longitud de los intervalos en que se dividen los 30 minutos de medición.
+				
+	La idea es que se dividen los 30 minutos en intervalos de tiempo. Luego nos quedamos sólo con las IPs que aparecen
+	en TODOS esos intervalos de tiempo como IP_DST de un who-has (que sea broadcast). Es decir, son las IPs que fueron
+	solicitadas de manera uniforme a lo largo de los 30 minutos.
+	
+	Luego en el archivo de salida quedará una matriz de dos columnas. En cada fila, tiene una IP de las mencionadas previamente
+	y asociada la cantidad de veces que fue solicitada en los 30 minutos.
+	
+	Luego ir a matlab, y ejecutar:
+	
+		graficos = graficosMatlab
+		graficos.hist_ips_mas_solicitadas('DatosProcesados/ips_solicitadas_6_CECEN.in')
+	
+	El argumento de la funcion es el archivo que antes era salida (con la matriz de dos columnas).
+	Esto genera el gráfico que luego habrá que guardar.
+	
+	
+2) Grafo de la red:
+	Primero generar el archivo del grafo (.tgf):
+		python parser.py Mediciones/medicionCECEN.txt grafo > DatosProcesados/grafo_CECEN.tgf
+		
+		python parser.py Mediciones/medicionEntrepiso.txt grafo > DatosProcesados/grafo_Entrepiso.tgf
+	
+		python parser.py Mediciones/medicionRedLabos.txt grafo > DatosProcesados/grafo_RedLabos.tgf
+	
+	Luego abrir yEd, y desde ahi abrir el archivo .tgf. Todos los nodos aparecen encimados, acá conviene
+	selececcionar todo, agrandar el tamaño de la cajita del nodo (para que entre el label adentro) y luego
+	ir a LAYOUT->CIRCULAR.

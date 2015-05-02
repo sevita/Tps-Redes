@@ -1,0 +1,105 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[paper=a4paper, left=1.5cm, right=1.5cm, bottom=1.5cm, top=1.5cm]{geometry}
+\usepackage{ucs}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage[latin,spanish]{babel}
+\usepackage{fontenc}
+\usepackage{graphicx}
+%\usepackage{epstopdf}
+\usepackage{caratula}
+
+% \usepackage{algpseudocode}
+% \usepackage{algorithmicx}
+% \usepackage{color}
+% \usepackage{pdfpages}
+% \usepackage{tikz}
+%%%%%% Si se usa tikz para dibujar digrafos, cuando pongas flechas, tira un conflicto. Se soluciona con estas dos lineas:
+% \usepackage[matrix,arrow]{xy}
+% \usetikzlibrary{intersections}
+
+% \usepackage{dsfont}
+% \newcommand{\real}{\mathds{R}}
+% \newcommand{\nat}{\mathds{N}}
+% \newcommand{\complejos}{\mathds{C}}
+% \newcommand{\Subesp}{\mathds{S}}
+
+\usepackage{hyperref}
+\hypersetup{%
+ % Para que el PDF se abra a pagina completa.
+  pdfstartview= {FitH \hypercalcbp{\paperheight-\topmargin-1in-\headheight}},
+  pdfauthor={Gaston Requeni},
+  pdfsubject={Preinforme - Final Orga2},
+ %pdfkeywords={keyword1} {key2} {key3},
+ colorlinks=true,
+  linkcolor=black,
+  urlcolor=blue
+}
+
+\author{Gastón Requeni}
+\title{TITULO}
+\date{DD/MM/AAAA}
+
+\parskip = 4pt
+
+
+%%%% UNA MAGIA PARA QUE LA BIBLIOGRAFIA SEA UNA SECCION MAS
+\makeatletter
+\renewenvironment{thebibliography}[1]
+     {\section{\bibname}% <-- this line was changed from \chapter* to \section*
+      \@mkboth{\MakeUppercase\bibname}{\MakeUppercase\bibname}%
+      \list{\@biblabel{\@arabic\c@enumiv}}%
+           {\settowidth\labelwidth{\@biblabel{#1}}%
+            \leftmargin\labelwidth
+            \advance\leftmargin\labelsep
+            \@openbib@code
+            \usecounter{enumiv}%
+            \let\p@enumiv\@empty
+            \renewcommand\theenumiv{\@arabic\c@enumiv}}%
+      \sloppy
+      \clubpenalty4000
+      \@clubpenalty \clubpenalty
+      \widowpenalty4000%
+      \sfcode`\.\@m}
+     {\def\@noitemerr
+       {\@latex@warning{Empty `thebibliography' environment}}%
+      \endlist}
+\makeatother
+
+\begin{document}
+
+\input{00caratula.tex}
+\newpage
+
+\tableofcontents
+\newpage
+
+\input{01introduccion.tex}
+\newpage
+
+\input{02desarrollo.tex}
+\newpage
+
+\input{03resultados.tex}
+\newpage
+
+\input{04discusion.tex}
+\newpage
+
+\section{Conclusiones}
+
+Capturando paquetes ARP podemos estimar la topología de la red de área local. Además teniendo en cuenta la cantidad de envíos y la información
+de las fuente $S_{src}$ podemos estimar qué IPs corresponden a switches (las que se encuentran por debajo o apenas por encima de la entropía). Esto sucede
+porque hay muchas IPs que en la fuente $S_{src}$ aparecen con muy baja probabilidad (muchas IPs que solicitan MACs de otros hosts, por ejemplo el router, pero lo hace una o dos veces y muy esporádicamente),
+entonces al calcular la entropía, todas esas quedan por encima y por debajo quedan las IPs que realizan muchas solicitudes (a todos esos mismos hosts mencionados).
+Por último, teniendo en cuenta la cantidad de recepciones y la información de la fuente $S_{dst}$ podemos destacar otras IPs que son muy solicitadas
+y proveen poca información.
+
+\newpage
+
+\input{bibliografia.tex}
+
+\end{document}
